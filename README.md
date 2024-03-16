@@ -1,4 +1,4 @@
-#arGIS_Custom_Basemap
+arGIS_Custom_Basemap
 ------------------------
 {arGIS連接自定地圖}<br>
 {arGIS連接自定底圖}<br>
