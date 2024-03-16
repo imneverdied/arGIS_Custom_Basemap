@@ -1,0 +1,94 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <!--
+     ArcGIS Maps SDK for JavaScript, https://js.arcgis.com
+     For more information about the layers-wms sample,
+     read the original sample description at developers.arcgis.com.
+     https://developers.arcgis.com/javascript/latest/sample-code/layers-wms/
+     -->
+    <title>WMSLayer | Sample | ArcGIS Maps SDK for JavaScript 4.29</title>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.29/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.29/"></script>
+
+    <script>
+      require([
+        'esri/Map',
+        'esri/views/SceneView',
+        'esri/layers/WMSLayer',
+        'esri/Graphic',
+      ], (Map, SceneView, WMSLayer, Graphic) => {
+        const layer = new WMSLayer({
+          url: 'https://wms.nlsc.gov.tw/wms',
+        });
+        layer.load().then(() => {
+          const sublayer = layer.findSublayerByName('OSM-WMS');
+          if (sublayer) {
+            layer.sublayers = [sublayer];
+          }
+        });
+
+        const map = new Map({
+          basemap: {
+            baseLayers: [layer],
+          },
+        });
+
+        const view = new SceneView({
+          container: 'viewDiv',
+          map: map,
+          zoom: 10, // 調整縮放層級以適合桃園地區
+          center: [121.29289287318088, 25.003557676527485], // 桃園的經緯度座標
+        });
+
+        // 桃園的座標
+        const point = {
+          type: 'point',
+          longitude: 121.29289287318088,
+          latitude: 25.003557676527485,
+        };
+
+        // 建立圖釘元素
+        const pointGraphic = new Graphic({
+          geometry: point,
+          attributes: {
+            name: '桃園', // 圖釘標題文字
+            description: '台灣桃園市', // 彈出視窗內容
+          },
+        });
+
+        // 將圖釘新增到地圖上
+        view.graphics.add(pointGraphic);
+      });
+    </script>
+  </head>
+
+  <body>
+    <nav>
+      <a href="/">ArcGIS範本</a>
+      <a href="/SceneView.html">ArcGIS載入NLSC臺灣通用電子地圖SceneView</a>
+      <a href="/MapView.html">ArcGIS載入NLSC臺灣通用電子地圖MapView</a>
+      <a href="/LayersStates.html">ArcGIS載入Layers_States</a>
+    </nav>
+    <div id="viewDiv"></div>
+  </body>
+</html>
